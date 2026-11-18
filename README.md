@@ -1,15 +1,104 @@
-# CodeSound: Workshop Series
+# SuperCollider Workshops
 
-CodeSound is a series of workshops exploring sound synthesis, sequencing, and algorithmic composition through code. Each workshop focuses on different tools, techniques, and approaches to computational sound, with an emphasis on experimentation, creative coding, and real-time performance.
+A collection of beginner-friendly SuperCollider workshops focused on sound synthesis, sequencing, and algorithmic composition.
 
-The repository collects workshop materials, SuperCollider patches, code examples, and resources shared by instructors and participants. It serves as an evolving archive for learning, experimentation, and the development of new sonic practices.
+---
 
-No previous experience is required unless specified for an individual workshop.
+## Workshop 01 — Sound Synthesis Fundamentals
 
-## Workshops
+Learn how sound is generated and shaped in SuperCollider.
 
-- **SuperCollider Workshop** — Sound synthesis, instrument design, algorithmic sequencing, and live coding with SuperCollider.
+### Topics
 
-## Repository
+1. Interface and Syntax
+2. Server and UGens
+3. Envelopes
+4. Advanced Envelopes
+5. Musical Patterns and Pitch
+6. Generative Composition
 
-[CodeSound-SuperCollider-Workshop](https://github.com/unsortedlove/CodeSound-SuperCollider-Workshop)
+### Learning Outcomes
+
+By the end of this workshop you will be able to:
+
+- Navigate the SuperCollider environment
+- Create sounds using UGens
+- Shape sounds with envelopes
+- Build custom SynthDefs
+- Work with scales, degrees, and chords
+- Create simple generative music systems
+
+---
+
+## Workshop 02 — Patterns and Sequencing
+
+Learn how to organize sound into musical structures using patterns.
+
+### Topics
+
+1. What Is a SynthDef?
+2. Controlling Parameters
+3. What Is a Pattern?
+4. Pseq, Prand and Pxrand
+5. Pbind and Instruments
+6. Controlling Multiple Parameters
+7. Duration and Rhythm
+8. Tempo and Quantisation
+9. Final Exercises
+
+### Learning Outcomes
+
+By the end of this workshop you will be able to:
+
+- Build reusable instruments
+- Sequence musical events using patterns
+- Control multiple synth parameters simultaneously
+- Work with rhythm and duration
+- Understand tempo and quantisation
+- Create algorithmic compositions
+
+---
+
+## Repository Structure
+
+```text
+.
+├── README.md
+├── slides/
+├── assets/
+│   ├── images/
+│   └── audio/
+└── code/
+    ├── workshop#1/
+    └── workshop#2/
+```
+
+---
+
+## Requirements
+
+- SuperCollider
+- Laptop
+- Headphones
+
+No prior SuperCollider experience is required.
+
+---
+
+## Organised by
+
+unsorted
+
+Website:
+https://unsorted.love/
+
+GitHub:
+https://github.com/unsortedlove
+
+---
+
+## License
+
+This material is provided for educational purposes.
+
+Feel free to use, modify, and share it with attribution.

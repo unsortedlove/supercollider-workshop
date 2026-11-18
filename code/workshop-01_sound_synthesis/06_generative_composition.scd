@@ -1,0 +1,713 @@
+//////////////////////////////////////////////////
+// 06 - GENERATIVE COMPOSITION
+//////////////////////////////////////////////////
+
+// SuperCollider Workshop
+// Luis Sanz
+// www.luissanz.ch
+
+//////////////////////////////////////////////////
+// LEARNING OBJECTIVES
+//////////////////////////////////////////////////
+
+// By the end of this lesson:
+//
+// • Create a more complex SynthDef
+// • Use patterns as compositional tools
+// • Explore predictable and random systems
+// • Combine pitch, rhythm and timbre
+// • Use TempoClock
+// • Create evolving musical structures
+
+//////////////////////////////////////////////////
+// THE TREMOLO SYNTH
+//////////////////////////////////////////////////
+
+(
+SynthDef(\tremolo, {
+
+	arg freq=500, amp=0.2, atk=1, rel=2, pan=0, trem=2;
+
+	var env;
+	var sig;
+
+	// envelope
+
+	env = EnvGen.kr(
+		Env.perc(atk, rel),
+		doneAction:2
+	);
+
+	// oscillator + tremolo
+
+	sig =
+	SinOscFB.ar(
+		freq,
+		0.9
+	)
+	*
+	SinOsc.ar(trem)
+	*
+	env
+	*
+	amp;
+
+	// stereo position
+
+	sig = Pan2.ar(sig, pan);
+
+	Out.ar(0, sig);
+
+}).add;
+)
+//////////////////////////////////////////////////
+// SYNTH ARGUMENTS
+//////////////////////////////////////////////////
+
+// freq
+// pitch
+
+// amp
+// amplitude
+
+// atk
+// attack time
+
+// rel
+// release time
+
+// pan
+// stereo position
+
+// trem
+// tremolo speed
+
+//////////////////////////////////////////////////
+// WHAT IS TREMOLO?
+//////////////////////////////////////////////////
+
+// Tremolo means:
+//
+// periodic amplitude changes.
+//
+// Slow tremolo:
+//
+// pulse-like movement.
+//
+// Fast tremolo:
+//
+// vibration-like movement.
+
+//////////////////////////////////////////////////
+// TEST THE SYNTH
+//////////////////////////////////////////////////
+(
+Synth(
+	\tremolo,
+	[
+		\freq,440,
+		\trem,5
+	]
+);
+)
+//////////////////////////////////////////////////
+// TEMPO CLOCK
+//////////////////////////////////////////////////
+
+// A TempoClock controls timing.
+//
+// Tempo is measured in:
+//
+// beats per second
+
+//////////////////////////////////////////////////
+// CREATE A CLOCK
+//////////////////////////////////////////////////
+
+t = TempoClock(120/60);
+
+//////////////////////////////////////////////////
+// CHANGE TEMPO
+//////////////////////////////////////////////////
+
+// 60 BPM
+
+t.tempo_(60/60);
+
+//////////////////////////////////////////////////
+
+// 120 BPM
+
+t.tempo_(120/60);
+
+//////////////////////////////////////////////////
+
+// 180 BPM
+
+t.tempo_(180/60);
+
+//////////////////////////////////////////////////
+// PREDICTABLE SYSTEM
+//////////////////////////////////////////////////
+
+// Musical goal:
+//
+// stable
+// repetitive
+// recognisable
+
+(
+Pbindef(
+
+	\predictable,
+
+	\instrument,\tremolo,
+
+	\scale,Scale.minor,
+
+	\degree,
+	Pseq(
+		[
+			0,
+			2,
+			4,
+			5,
+			4,
+			2
+		],
+		inf
+	),
+
+	\trem,
+	Pseq(
+		[
+			1,
+			2,
+			4,
+			2
+		],
+		inf
+	),
+
+	\atk,0.05,
+
+	\rel,2,
+
+	\dur,0.25,
+
+	\amp,0.15
+
+).play(t);
+)
+
+//////////////////////////////////////////////////
+// STOP
+//////////////////////////////////////////////////
+
+Pbindef(\predictable).stop;
+
+//////////////////////////////////////////////////
+// DISCUSSION
+//////////////////////////////////////////////////
+
+// Why does it sound predictable?
+//
+// Which parameters repeat?
+
+//////////////////////////////////////////////////
+// UNPREDICTABLE SYSTEM
+//////////////////////////////////////////////////
+
+// Musical goal:
+//
+// surprise
+// variation
+// evolving behaviour
+
+(
+Pbindef(
+
+	\unpredictable,
+
+	\instrument,\tremolo,
+
+	\scale,Scale.minor,
+
+	\degree,
+
+	Pxrand(
+
+		[
+			0,
+			1,
+			2,
+			3,
+			4,
+			5,
+			6,
+			[-7,-3,0,2,4,6],
+			7
+		],
+
+		inf
+
+	),
+
+	\atk,0.01,
+
+	\rel,
+	Phprand(
+		3.0,
+		5.0,
+		inf
+	),
+
+	\trem,
+
+	Pkey(\degree)
+
+	+
+
+	Pseq(
+		[
+			0.1,
+			0.2,
+			0.5,
+			0.7
+		],
+		inf
+	),
+
+	\amp,
+	Pseq(
+		[
+			Pn(0.6,5),
+			0.06
+		],
+		inf
+	),
+
+	\pan,
+	Pwhite(
+		-0.3,
+		0.3,
+		inf
+	),
+
+	\dur,
+
+	Pseq(
+
+		[
+			0.1,
+			0.2,
+			0.5,
+			0.7,
+			0.1,
+			0.1,
+			1.3,
+			1
+		],
+
+		inf
+
+	)
+
+).play(t);
+)
+
+//////////////////////////////////////////////////
+// STOP
+//////////////////////////////////////////////////
+
+Pbindef(\unpredictable).stop;
+
+//////////////////////////////////////////////////
+// DISCUSSION
+//////////////////////////////////////////////////
+
+// Which parameters create
+// the unpredictability?
+//
+// degree?
+//
+// duration?
+//
+// release?
+//
+// panning?
+
+//////////////////////////////////////////////////
+// ERRATIC SYSTEM
+//////////////////////////////////////////////////
+
+// Musical goal:
+//
+// abrupt
+// fragmented
+// unstable
+
+(
+Pbindef(
+
+	\erratic,
+
+	\instrument,\tremolo,
+
+	\scale,Scale.minor,
+
+	\degree,
+
+	Prand(
+
+		[
+			Phprand(-7,7,1),
+
+			Pxrand(
+				[
+					0,
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7
+				],
+				1
+			)
+
+		],
+
+		inf
+
+	),
+
+	\trem,
+
+	Pwhite(
+		0.5,
+		7,
+		inf
+	),
+
+	\amp,0.05,
+
+	\pan,
+
+	Pwhite(
+		-1,
+		1,
+		inf
+	),
+
+	\dur,
+
+	Prand(
+
+		[
+			0.02,
+			0.05,
+			0.1,
+			0.2,
+			0.5,
+			1
+		],
+
+		inf
+
+	)
+
+).play(
+	t,
+	quant:4
+);
+)
+
+//////////////////////////////////////////////////
+// STOP
+//////////////////////////////////////////////////
+
+Pbindef(\erratic).stop;
+
+//////////////////////////////////////////////////
+// DISCUSSION
+//////////////////////////////////////////////////
+
+// Does this sound:
+//
+// mechanical?
+//
+// nervous?
+//
+// chaotic?
+
+//////////////////////////////////////////////////
+// SHIMMERING SYSTEM
+//////////////////////////////////////////////////
+
+// Musical goal:
+//
+// floating texture
+//
+// long resonances
+//
+// slow movement
+
+(
+Pbindef(
+
+	\shimmering,
+
+	\instrument,\tremolo,
+
+	\scale,Scale.minor,
+
+	\degree,
+
+	Pxrand(
+
+		[
+
+			[0,2,4],
+
+			[0,3,5],
+
+			[0,2,4,6],
+
+			[-7,-3,0,2],
+
+			[0,4,7],
+
+			[2,4,6],
+
+			[4,6,8]
+
+		],
+
+		inf
+
+	),
+
+	\octave,
+
+	Pseq(
+		[3,4,5,4],
+		inf
+	),
+
+	\atk,0.01,
+
+	\rel,
+
+	Phprand(
+		3.0,
+		5.0,
+		inf
+	),
+
+	\trem,
+
+	Pwhite(
+		0.5,
+		8,
+		inf
+	),
+
+	\amp,0.15,
+
+	\pan,
+
+	Pwhite(
+		-0.3,
+		0.3,
+		inf
+	),
+
+	\dur,
+
+	Pseq(
+		[
+			0.1,
+			0.2,
+			0.5,
+			0.7,
+			1
+		],
+		inf
+	),
+
+	\strum,0.05
+
+).play(
+	t,
+	quant:4
+);
+)
+
+//////////////////////////////////////////////////
+// STOP
+//////////////////////////////////////////////////
+
+Pbindef(\shimmering).stop;
+
+//////////////////////////////////////////////////
+// COMPARING SYSTEMS
+//////////////////////////////////////////////////
+
+// Predictable
+//
+// Repetition
+// Structure
+// Stability
+
+//////////////////////////////////////////////////
+
+// Unpredictable
+//
+// Variation
+// Surprise
+// Evolution
+
+//////////////////////////////////////////////////
+
+// Erratic
+//
+// Instability
+// Sudden change
+// Fragmentation
+
+//////////////////////////////////////////////////
+
+// Shimmering
+//
+// Harmony
+// Texture
+// Space
+
+//////////////////////////////////////////////////
+// EXPERIMENT
+//////////////////////////////////////////////////
+
+// Change only:
+//
+// degree
+//
+// and listen.
+
+//////////////////////////////////////////////////
+
+// Change only:
+//
+// dur
+//
+// and listen.
+
+//////////////////////////////////////////////////
+
+// Change only:
+//
+// trem
+//
+// and listen.
+
+//////////////////////////////////////////////////
+
+// Change only:
+//
+// release
+//
+// and listen.
+
+//////////////////////////////////////////////////
+// CREATIVE EXERCISES
+//////////////////////////////////////////////////
+
+// Exercise 1
+//
+// Create a calm texture.
+
+//////////////////////////////////////////////////
+
+// Exercise 2
+//
+// Create a machine-like texture.
+
+//////////////////////////////////////////////////
+
+// Exercise 3
+//
+// Create a drone using
+// only one degree.
+
+//////////////////////////////////////////////////
+
+// Exercise 4
+//
+// Use only chords.
+
+//////////////////////////////////////////////////
+
+// Exercise 5
+//
+// Create a pattern using:
+//
+// degree
+// dur
+// trem
+// pan
+
+//////////////////////////////////////////////////
+
+// Exercise 6
+//
+// Create three layers:
+//
+// bass
+// harmony
+// melody
+
+//////////////////////////////////////////////////
+// GOOD HABITS
+//////////////////////////////////////////////////
+
+// Change one parameter
+// at a time.
+//
+// Listen carefully.
+//
+// Save interesting versions.
+//
+// Name your patterns.
+//
+// Think musically, not only
+// technically.
+
+//////////////////////////////////////////////////
+// SUMMARY
+//////////////////////////////////////////////////
+
+// TempoClock
+// Controls timing
+//
+// SynthDef
+// Generates sound
+//
+// Pbind
+// Generates musical events
+//
+// Degree
+// Controls scale position
+//
+// Dur
+// Controls note timing
+//
+// Trem
+// Controls movement
+//
+// Multiple simple rules
+// can create complex music.
+
+//////////////////////////////////////////////////
+// END
+//////////////////////////////////////////////////
